@@ -1,14 +1,19 @@
 
 <?php
 	/* Login php - Assignment 1 by Jesse Steedle */
-		
-	include ('functions.php');
+
+	//error_reporting(E_ALL);
+	//ini_set('display_errors', TRUE);
+	
+	include ('functions.php');	
+	include ('feed.php');
+	
 	//start session
-	session_start();	
+	session_start();
 	//get username and password from $_POST
-	$u = $_POST["username"];
+	$username = $_POST["username"];
 	// Scrub the username
-	$username = sanitizeString($u);
+	$username = sanitizeString($username);
 	$password = $_POST["password"];
 
 	$dbhost = "localhost";	
@@ -21,7 +26,7 @@
 	if( mysqli_connect_errno($conn)){
 	  echo "Failed to connect to MySQL: " . mysqli_connect_error();
 	}
-	//$result = mysqli_query($conn, "SELECT * FROM users WHERE username='$username' AND password='$password'");
+	
 	$result = mysqli_query($conn, "SELECT * FROM users WHERE username='$username'");
 	
 	// check for results returned
@@ -30,7 +35,7 @@
 	if($num_of_rows > 0){
 		// fetch the hashed password from Db
 		$row = mysqli_fetch_assoc($result);
-		$pw_hash = $row['password'];
+		$pw_hash = $row['Password'];
 		//verify the password vs the hash
 		if (password_verify($password, $pw_hash))
 		{
@@ -46,7 +51,5 @@
 		// user not found in db
 		echo "User not Found.  Try again.";
 	}
-
-}
 ?>
 
